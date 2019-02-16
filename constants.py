@@ -1,0 +1,2 @@
+GENES_MIN = 0
+GENES_MAX = 31
