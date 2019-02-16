@@ -105,7 +105,7 @@ class Algorithm:
                 print("Przeprowadzam krzyzowanie")
                 locus = random.randint(1, 4)
                 print("Losuje liczbe z przedzialu [1, 4] oznaczajaca miejsce krzyzowania: {0}".format(locus))
-                temporary = pair[0]
+                temporary = copy.deepcopy(pair[0])
                 pair[0].cross_genes(pair[1], locus)
                 pair[1].cross_genes(temporary, locus)
             else:
