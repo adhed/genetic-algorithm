@@ -2,6 +2,7 @@ from chromosome import Chromosome
 import math
 import sys
 import random
+import copy
 
 class Algorithm:
     def __init__(self, chromosomes_number, iterations, function, crossing_rate, mutation_rate):
@@ -29,6 +30,15 @@ class Algorithm:
             self.select_by_roulette()
             self.apply_crossings()
             self.apply_mutations()
+        
+        self.print_final()
+
+    def print_final(self):
+        print("------------------------------------")
+        print("Finalna populacja:")
+        print("------------------------------------")
+        for chromosome in self.chromosomes:
+            chromosome.print()
 
     def calculate_adaptations(self):
         for chromosome in self.chromosomes:
@@ -51,7 +61,7 @@ class Algorithm:
         for pick in picks:
             print("Wylosowana liczba to: {0}".format(pick))
             selected = self.get_selected_individual(pick, total)
-            new_population.append(selected)
+            new_population.append(copy.deepcopy(selected))
         
         self.chromosomes = new_population.copy()
         print("------------------------------------")
@@ -71,8 +81,38 @@ class Algorithm:
 
     def apply_crossings(self):
         print("------------------------------------")
-        print("Przeprowadzam krzyzowanie, wspolczynnik Pk = {0}".format(self.crossing_rate))
+        print("Probuje przeprowadzic krzyzowanie, wspolczynnik Pk = {0}".format(self.crossing_rate))
         print("------------------------------------")
+        pairs = []
+        while len(self.chromosomes):
+            random1 = self.pop_random()
+            random2 = self.pop_random()
+            pair = random1, random2
+            pairs.append(pair)
+        
+        for pair in pairs:
+            print("{0} i {1}".format(pair[0].id, pair[1].id))
+
+        print("------------------------------------")
+        print("Dla kazdej pary losuje liczbe z przedzialu [0,1] i sprawdzam czy zajdzie krzyzowanie")
+        print("------------------------------------")
+
+        for pair in pairs:
+            crossing_random = random.uniform(0.0, 1.0)
+            print("Dla pary {0} i {1}, liczba = {2}".format(pair[0].id, pair[1].id, crossing_random))
+
+            if crossing_random <= self.crossing_rate:
+                print("Przeprowadzam krzyzowanie")
+                locus = random.randint(1, 4)
+                print("Losuje liczbe z przedzialu [1, 4] oznaczajaca miejsce krzyzowania: {0}".format(locus))
+                temporary = pair[0]
+                pair[0].cross_genes(pair[1], locus)
+                pair[1].cross_genes(temporary, locus)
+            else:
+                print("Krzyzowanie nie zajdzie...")
+            
+            self.chromosomes.append(pair[0])
+            self.chromosomes.append(pair[1])
 
     def apply_mutations(self):
         print("------------------------------------")
@@ -87,3 +127,6 @@ class Algorithm:
             else:
                 print("Nie przeprowadzam mutacji...")
         
+    def pop_random(self):
+        idx = random.randint(0, len(self.chromosomes) - 1)
+        return self.chromosomes.pop(idx)

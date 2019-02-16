@@ -48,4 +48,19 @@ class Chromosome:
 
         print("Po mutacji: {0}".format(self.genes))
 
+        self.id = "{0}m".format(self.id)
+
+        self.calculate_phenotype()
+
+    def cross_genes(self, crossing_chromosome, locus):
+        print("Przed krzyzowaniem: {0}".format(self.genes))
+
+        while locus <= 4:
+            self.genes[locus] = crossing_chromosome.genes[locus]
+            locus += 1
+
+        print("Po krzyzowaniu: {0}".format(self.genes))
+
+        self.id = "{0}k".format(self.id)
+
         self.calculate_phenotype()
