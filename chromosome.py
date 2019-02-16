@@ -55,7 +55,7 @@ class Chromosome:
     def cross_genes(self, crossing_chromosome, locus):
         print("Przed krzyzowaniem: {0}".format(self.genes))
 
-        while locus <= 4:
+        while locus <= 3:
             self.genes[locus + 1] = crossing_chromosome.genes[locus + 1]
             locus += 1
 
